@@ -19,10 +19,10 @@ $token = $_ENV['TOKEN'];
 $url = $_ENV['LINK'];
 
 // Koneksi ke database
-$host = 'localhost'; // Ubah sesuai konfigurasi Anda
-$dbname = 'data_ocr';
-$username = 'root';
-$password = '';
+$host = $_ENV['DB']; 
+$dbname = $_ENV['DBNAME'];
+$username = $_ENV['USERNAME'];
+$password = $_ENV['PASSWORD'];
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
