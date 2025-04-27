@@ -19,7 +19,7 @@ $token = $_ENV['TOKEN'];
 $url = $_ENV['LINK'];
 
 // Koneksi ke database
-$host = $_ENV['DB']; 
+$host = $_ENV['DB'];
 $dbname = $_ENV['DBNAME'];
 $username = $_ENV['USERNAME'];
 $password = $_ENV['PASSWORD'];
@@ -160,12 +160,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sheet->fromArray([
                 $item['provinsi'],
                 $item['kabupaten_kota'],
-                $item['tanggal_diterbitkan'],
+                null, // sementara kosongin tanggal diterbitkan
                 $item['tempat_diterbitkan'],
                 null, // sementara kosongin NIK, nanti kita isi pakai setCellValueExplicit
                 $item['nama'],
                 $item['jenis_kelamin'],
-                $item['tanggal_lahir'],
+                null, // sementara kosongin tanggal lahir
                 $item['tempat_lahir'],
                 $item['rt'],
                 $item['rw'],
@@ -179,6 +179,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $item['berlaku_hingga'],
                 $item['image_name'],
             ], NULL, 'A' . $rowNum);
+
+            $tanggal_diterbitkan = \PhpOffice\PhpSpreadsheet\Shared\Date::stringToExcel($item['tanggal_diterbitkan']);
+            $sheet->setCellValue('C' . $rowNum, $tanggal_diterbitkan);
+            // Atur style cell supaya tampil sebagai tanggal
+            $sheet->getStyle('C' . $rowNum)->getNumberFormat()->setFormatCode('yyyy/mm/dd');
+
+            $timestamp = \PhpOffice\PhpSpreadsheet\Shared\Date::stringToExcel($item['tanggal_lahir']);
+            $sheet->setCellValue('H' . $rowNum, $timestamp);
+            // Atur style cell supaya tampil sebagai tanggal
+            $sheet->getStyle('H' . $rowNum)->getNumberFormat()->setFormatCode('yyyy/mm/dd'); // kamu bisa ganti format sesuai mau
 
             // Sekarang khusus untuk kolom E (NIK), set sebagai TEXT
             $sheet->setCellValueExplicit('E' . $rowNum, $item['nik'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
